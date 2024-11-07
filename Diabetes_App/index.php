@@ -97,51 +97,55 @@
 		</style>
   </head>
   <body>
-    <div class="p-4 bg-background rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold text-foreground">Hello! Kiki Alghifari</h1>
-    <div class="flex items-center mt-2">
-        <input type="text" placeholder="Search..." class="border border-border rounded-lg p-2 flex-grow" />
-        <button class="ml-2 bg-primary text-primary-foreground p-2 rounded-lg">🔍</button>
-    </div>
-
-    <div class="mt-4">
-        <div class="flex justify-between items-center">
-            <div class="bg-red-500 text-white p-2 rounded-lg">MCG 5.7%</div>
-            <div class="bg-green-500 text-white p-2 rounded-lg">AS 100 mg/dl</div>
-            <div class="bg-yellow-500 text-white p-2 rounded-lg">TG 15%</div>
+    <div class="bg-background text-foreground min-h-screen">
+    
+    <nav class="bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center py-4">
+            <h1 class="text-3xl font-extrabold text-white">Diabetes Manager</h1>
+            <button class="bg-yellow-400 text-zinc-800 hover:bg-yellow-300 px-4 py-2 rounded-lg transition duration-300">Sign In</button>
         </div>
-        <div class="mt-4">
-            <div class="relative w-full h-32 bg-zinc-200 rounded-full">
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <span class="text-lg font-bold text-foreground">Health Score</span>
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-24 h-24 rounded-full border-8 border-primary bg-transparent flex items-center justify-center">
-                        <span class="text-2xl font-bold text-primary-foreground">75%</span>
-                    </div>
-                </div>
+    </nav>
+    
+    <section class="container mx-auto py-12 text-center">
+        <h2 class="text-6xl font-extrabold mb-4 text-gradient">Empowering You to Manage Diabetes</h2>
+        <p class="text-lg mb-8 text-muted">Track your blood sugar, medications, and more with our easy-to-use platform.</p>
+        <button class="bg-gradient-to-r from-green-400 to-teal-500 text-white hover:bg-green-300 px-6 py-3 rounded-lg transition duration-300">Get Started</button>
+    </section>
+    
+    <section class="bg-card text-card-foreground py-12">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="p-6 rounded-lg shadow-lg bg-white transition-transform transform hover:scale-105 hover:shadow-2xl">
+                <img src="https://placehold.co/150?text=Blood+Sugar" alt="Blood Sugar" class="mx-auto mb-4 rounded-full shadow-md" />
+                <h3 class="text-xl font-bold mb-2 text-purple-600">Blood Sugar Tracking</h3>
+                <p class="text-muted">Monitor your blood sugar levels and trends effortlessly.</p>
+            </div>
+            
+            <div class="p-6 rounded-lg shadow-lg bg-white transition-transform transform hover:scale-105 hover:shadow-2xl">
+                <img src="https://placehold.co/150?text=Medication" alt="Medication" class="mx-auto mb-4 rounded-full shadow-md" />
+                <h3 class="text-xl font-bold mb-2 text-purple-600">Medication Reminders</h3>
+                <p class="text-muted">Never miss a dose with our medication reminder feature.</p>
+            </div>
+            
+            <div class="p-6 rounded-lg shadow-lg bg-white transition-transform transform hover:scale-105 hover:shadow-2xl">
+                <img src="https://placehold.co/150?text=Insights" alt="Insights" class="mx-auto mb-4 rounded-full shadow-md" />
+                <h3 class="text-xl font-bold mb-2 text-purple-600">Personalized Insights</h3>
+                <p class="text-muted">Get actionable insights based on your health data.</p>
             </div>
         </div>
-    </div>
-
-    <h2 class="mt-6 text-xl font-semibold text-foreground">Research and courses</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="bg-card p-4 rounded-lg shadow-md">
-            <img src="https://openui.fly.dev/openui/24x24.svg?text=📖" alt="Research Course" class="w-full h-24 object-cover rounded-md" />
-            <h3 class="mt-2 font-bold text-foreground">Layanan Klinik</h3>
-            <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-2 p-2 rounded-lg">Lihat semua</button>
-        </div>
-        <div class="bg-card p-4 rounded-lg shadow-md">
-            <img src="https://openui.fly.dev/openui/24x24.svg?text=💊" alt="Pharmacy Service" class="w-full h-24 object-cover rounded-md" />
-            <h3 class="mt-2 font-bold text-foreground">Layanan Apotek</h3>
-            <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-2 p-2 rounded-lg">Lihat semua</button>
-        </div>
-        <div class="bg-card p-4 rounded-lg shadow-md">
-            <img src="https://openui.fly.dev/openui/24x24.svg?text=🔬" alt="Laboratory Service" class="w-full h-24 object-cover rounded-md" />
-            <h3 class="mt-2 font-bold text-foreground">Layanan Laboratorium</h3>
-            <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-2 p-2 rounded-lg">Lihat semua</button>
-        </div>
-    </div>
+    </section>
+    
+    <section class="container mx-auto text-center py-12">
+        <h2 class="text-5xl font-extrabold mb-4 text-gradient">Start Managing Your Diabetes Today</h2>
+        <p class="text-lg mb-8 text-muted">Join thousands of users who are taking control of their health.</p>
+        <button class="bg-gradient-to-r from-orange-400 to-red-500 text-white hover:bg-orange-300 px-6 py-3 rounded-lg transition duration-300">Sign Up Now</button>
+    </section>
+    
+    <footer class="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-center py-4">
+        <p>&copy; 2023 Diabetes Manager. All rights reserved.</p>
+    </footer>
 </div>
+
+
   </body>
 </html>
