@@ -1,14 +1,15 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import bcrypt
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # Cambia esto por una clave secreta más segura
 
 # Conectar a MongoDB
 client = MongoClient("mongodb+srv://alexcamdel254:KQVI1NIGDBkQpgme@cluster0.ryqs3.mongodb.net/")
-db = client['Diabetes']  # Cambia 'your_database_name' por el nombre de tu BD
+db = client['Diabetes']
 users_collection = db['Users']
 health_records_collection = db['health_records']
 
@@ -22,6 +23,13 @@ def login_page():
 def health_form():
     return render_template('health_form.html')
 
+@app.route('/Home')
+def Home():
+    if 'username' in session and 'role' in session:
+        return render_template('index.html', username=session['username'], role=session['role'])
+    else:
+        return redirect(url_for('login_page'))
+
 # Ruta para manejar el login
 @app.route('/login', methods=['POST'])
 def login():
@@ -29,7 +37,9 @@ def login():
     password = request.form['password']
     user = users_collection.find_one({"username": username})
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
-        return redirect(url_for('health_form'))
+        session['username'] = user['username']
+        session['role'] = user.get('role', 'User')  # Valor por defecto 'User' si no existe
+        return redirect(url_for('Home'))
     else:
         return "Usuario o contraseña incorrecta."
 
@@ -56,6 +66,12 @@ def submit_health_data():
         return "Positivo para diabetes. Consulta a un médico."
     else:
         return "Negativo para diabetes. Mantén hábitos saludables."
+
+# Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login_page'))
 
 if __name__ == "__main__":
     app.run(debug=True)

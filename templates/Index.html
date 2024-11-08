@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+        <title>Home - Diabetes Manager</title>
 		<script type="text/javascript">
 			window.tailwind.config = {
 				darkMode: ['class'],
@@ -99,18 +100,19 @@
   <body>
     <div class="bg-background text-foreground min-h-screen">
     
-    <nav class="bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center py-4">
-            <h1 class="text-3xl font-extrabold text-white">Diabetes Manager</h1>
-            <button class="bg-yellow-400 text-zinc-800 hover:bg-yellow-300 px-4 py-2 rounded-lg transition duration-300">Sign In</button>
-        </div>
-    </nav>
+        <nav class="bg-gradient-to-r from-purple-500 to-blue-500 shadow-lg">
+            <div class="container mx-auto flex justify-between items-center py-4">
+                <h1 class="text-3xl font-extrabold text-white">Diabetes Manager</h1>
+                <p class="text-white">Welcome, {{ username }} (Role: {{ role }})</p>
+                <a href="{{ url_for('logout') }}" class="bg-yellow-400 text-zinc-800 hover:bg-yellow-300 px-4 py-2 rounded-lg transition duration-300">Logout</a>
+            </div>
+        </nav>
     
-    <section class="container mx-auto py-12 text-center">
-        <h2 class="text-6xl font-extrabold mb-4 text-gradient">Empowering You to Manage Diabetes</h2>
-        <p class="text-lg mb-8 text-muted">Track your blood sugar, medications, and more with our easy-to-use platform.</p>
-        <button class="bg-gradient-to-r from-green-400 to-teal-500 text-white hover:bg-green-300 px-6 py-3 rounded-lg transition duration-300">Get Started</button>
-    </section>
+        <section class="container mx-auto py-12 text-center">
+            <h2 class="text-6xl font-extrabold mb-4 text-gradient">Empowering You to Manage Diabetes</h2>
+            <p class="text-lg mb-8 text-muted">Track your blood sugar, medications, and more with our easy-to-use platform.</p>
+            <a href="{{ url_for('health_form') }}" class="bg-gradient-to-r from-green-400 to-teal-500 text-white hover:bg-green-300 px-6 py-3 rounded-lg transition duration-300">Get Started</a>
+        </section>
     
     <section class="bg-card text-card-foreground py-12">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -4,35 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Datos de Salud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f4f7fc;
+        }
+    </style>
 </head>
-<body>
-    <h2>Ingresar Datos de Salud</h2>
-    <form action="/submit_health_data" method="POST">
-        <label for="pregnancies">Número de Embarazos:</label>
-        <input type="number" id="pregnancies" name="pregnancies" required><br><br>
+<body class="font-sans text-gray-900">
 
-        <label for="glucose">Nivel de Glucosa:</label>
-        <input type="number" id="glucose" name="glucose" required><br><br>
+    <div class="flex justify-center items-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+            <h2 class="text-2xl font-semibold text-center text-primary mb-6">Ingresar Datos de Salud</h2>
+            <form action="/submit_health_data" method="POST">
+                <div class="space-y-4">
+                    <div>
+                        <label for="pregnancies" class="block text-gray-700 font-medium">Número de Embarazos:</label>
+                        <input type="number" id="pregnancies" name="pregnancies" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="blood_pressure">Presión Arterial:</label>
-        <input type="number" id="blood_pressure" name="blood_pressure" required><br><br>
+                    <div>
+                        <label for="glucose" class="block text-gray-700 font-medium">Nivel de Glucosa:</label>
+                        <input type="number" id="glucose" name="glucose" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="skin_thickness">Grosor de la Piel:</label>
-        <input type="number" id="skin_thickness" name="skin_thickness" required><br><br>
+                    <div>
+                        <label for="blood_pressure" class="block text-gray-700 font-medium">Presión Arterial:</label>
+                        <input type="number" id="blood_pressure" name="blood_pressure" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="insulin">Nivel de Insulina:</label>
-        <input type="number" id="insulin" name="insulin" required><br><br>
+                    <div>
+                        <label for="skin_thickness" class="block text-gray-700 font-medium">Grosor de la Piel:</label>
+                        <input type="number" id="skin_thickness" name="skin_thickness" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="bmi">Índice de Masa Corporal (BMI):</label>
-        <input type="number" id="bmi" name="bmi" step="0.1" required><br><br>
+                    <div>
+                        <label for="insulin" class="block text-gray-700 font-medium">Nivel de Insulina:</label>
+                        <input type="number" id="insulin" name="insulin" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="diabetes_pedigree">Función de Pedigrí para Diabetes:</label>
-        <input type="number" id="diabetes_pedigree" name="diabetes_pedigree" step="0.001" required><br><br>
+                    <div>
+                        <label for="bmi" class="block text-gray-700 font-medium">Índice de Masa Corporal (BMI):</label>
+                        <input type="number" id="bmi" name="bmi" step="0.1" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <label for="age">Edad:</label>
-        <input type="number" id="age" name="age" required><br><br>
+                    <div>
+                        <label for="diabetes_pedigree" class="block text-gray-700 font-medium">Función de Pedigrí para Diabetes:</label>
+                        <input type="number" id="diabetes_pedigree" name="diabetes_pedigree" step="0.001" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
 
-        <button type="submit">Enviar Datos</button>
-    </form>
+                    <div>
+                        <label for="age" class="block text-gray-700 font-medium">Edad:</label>
+                        <input type="number" id="age" name="age" required
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" />
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Enviar Datos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
