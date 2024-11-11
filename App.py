@@ -7,6 +7,7 @@ import pandas as pd
 from scipy.stats import entropy
 from sklearn.model_selection import train_test_split
 from sklearn import tree
+import joblib  # Importar joblib
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Cambia esto por una clave secreta más segura
@@ -15,38 +16,46 @@ app.secret_key = 'supersecretkey'  # Cambia esto por una clave secreta más segu
 client = MongoClient("mongodb+srv://alexcamdel254:KQVI1NIGDBkQpgme@cluster0.ryqs3.mongodb.net/")
 db = client['Diabetes']  # Cambia 'Diabetes' por el nombre de tu BD
 users_collection = db['Users']
-coleccion = db.health_records
+# coleccion = db.health_records
 
-# Obtener los documentos de MongoDB y convertirlos en un DataFrame
-documents = coleccion.find()
-documentos = list(documents)  # Convertir a lista para el DataFrame
-datos_finales = pd.DataFrame(documentos)
+# # Obtener los documentos de MongoDB y convertirlos en un DataFrame
+# documents = coleccion.find()
+# documentos = list(documents)  # Convertir a lista para el DataFrame
+# datos_finales = pd.DataFrame(documentos)
 
-# Calcular la entropía para las variables
-variables = ['Age', 'Glucose', 'Pregnancies', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction']
-entropias = {}
-for var in variables:
-    probs = datos_finales[var].value_counts(normalize=True)
-    entropias[var] = entropy(probs, base=2)
-    print(f"Entropía de '{var}': {entropias[var]}")
+# # Calcular la entropía para las variables
+# variables = ['Age', 'Glucose', 'Pregnancies', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction']
+# entropias = {}
+# for var in variables:
+#     probs = datos_finales[var].value_counts(normalize=True)
+#     entropias[var] = entropy(probs, base=2)
+#     print(f"Entropía de '{var}': {entropias[var]}")
 
-# Eliminar filas con valores NaN en las características o la variable objetivo
-datos_finales = datos_finales.dropna(subset=variables + ['Outcome'])
+# # Eliminar filas con valores NaN en las características o la variable objetivo
+# datos_finales = datos_finales.dropna(subset=variables + ['Outcome'])
 
-# Seleccionar las características y la variable objetivo después de eliminar NaNs
-features = datos_finales[variables]
-target = datos_finales['Outcome']
+# # Seleccionar las características y la variable objetivo después de eliminar NaNs
+# features = datos_finales[variables]
+# target = datos_finales['Outcome']
 
-# Dividir los datos en conjuntos de entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.30)
+# # Dividir los datos en conjuntos de entrenamiento y prueba
+# X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.40)
 
-# Crear y entrenar el árbol de decisión
-decision_tree = tree.DecisionTreeClassifier(criterion='entropy', max_depth=4)
-decision_tree.fit(X_train, y_train)
+# # Crear y entrenar el árbol de decisión
+# decision_tree = tree.DecisionTreeClassifier(criterion='entropy', max_depth=10)
+# decision_tree.fit(X_train, y_train)
 
-# Evaluar el modelo
-accuracy = decision_tree.score(X_test, y_test)
-print(f"Exactitud del modelo: {accuracy}")
+# # Guardar el modelo entrenado en un archivo pkl
+# joblib.dump(decision_tree, 'decision_tree_model.pkl')
+# print("Modelo guardado en 'decision_tree_model.pkl'")
+
+# # Evaluar el modelo
+# accuracy = decision_tree.score(X_test, y_test)
+# print(f"Exactitud del modelo: {accuracy}")
+
+# Cargar el modelo en la aplicación Flask para usarlo en la predicción
+decision_tree = joblib.load('decision_tree_model.pkl')
+print("Modelo cargado exitosamente")
 
 # Ruta para mostrar el formulario de login
 @app.route('/')
@@ -117,7 +126,7 @@ def register():
 def formTest():
     return render_template('formTest.html')
 
-# Ruta para realizar el diagnóstico
+# Ruta para realizar el diagnóstico usando el modelo cargado
 @app.route('/evaluar_diabetes', methods=['POST'])
 def evaluar_diabetes():
     datos = request.get_json()
@@ -136,6 +145,8 @@ def evaluar_diabetes():
     
     # Crear un DataFrame con los datos del usuario
     datos_usuario = pd.DataFrame([input_data])
+    
+    # Realizar la predicción con el modelo cargado
     resultado = decision_tree.predict(datos_usuario)
     
     # Generar el diagnóstico
