@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Diabetes</title>
+    <style>
+        /* Estilo general para la página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Contenedor principal */
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        /* Título de la página */
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        /* Estilo para los labels y campos de entrada */
+        label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        input[type="number"], input[type="text"], input[type="email"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus, input[type="email"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Estilo para el área de resultado */
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+
+        /* Añadir espaciado entre los campos */
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Formulario de Diagnóstico de Diabetes</h1>
+        
+        <form id="diagnosisForm">
+            <div class="form-group">
+                <label for="age">Edad:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="glucose">Nivel de Glucosa:</label>
+                <input type="number" id="glucose" name="glucose" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pregnancies">Número de Embarazos:</label>
+                <input type="number" id="pregnancies" name="pregnancies" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bloodpressure">Presión Arterial:</label>
+                <input type="number" id="bloodpressure" name="bloodpressure" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skinthickness">Grosor de la Piel:</label>
+                <input type="number" id="skinthickness" name="skinthickness" required>
+            </div>
+
+            <div class="form-group">
+                <label for="insulin">Nivel de Insulina:</label>
+                <input type="number" id="insulin" name="insulin" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bmi">Índice de Masa Corporal (BMI):</label>
+                <input type="number" step="0.1" id="bmi" name="bmi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="diabetespedigreefunction">Función de Pedigrí de Diabetes:</label>
+                <input type="number" step="0.01" id="diabetespedigreefunction" name="diabetespedigreefunction" required>
+            </div>
+
+            <button type="submit">Evaluar</button>
+        </form>
+
+        <h2>Resultado:</h2>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.getElementById("diagnosisForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Obtener los valores del formulario
+            const formData = {
+                age: document.getElementById("age").value,
+                glucose: document.getElementById("glucose").value,
+                pregnancies: document.getElementById("pregnancies").value,
+                bloodpressure: document.getElementById("bloodpressure").value,
+                skinthickness: document.getElementById("skinthickness").value,
+                insulin: document.getElementById("insulin").value,
+                bmi: document.getElementById("bmi").value,
+                diabetespedigreefunction: document.getElementById("diabetespedigreefunction").value
+            };
+
+            // Enviar los datos al backend (Flask) usando fetch
+            fetch('/evaluar_diabetes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mostrar el resultado del diagnóstico
+                document.getElementById("result").textContent = data.resultado;
+            })
+            .catch(error => {
+                console.error('Error al enviar los datos:', error);
+                document.getElementById("result").textContent = "Hubo un error al procesar la solicitud.";
+            });
+        });
+    </script>
+
+</body>
+</html>
