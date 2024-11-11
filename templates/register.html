@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+  <title>Login</title>
+  <script type="text/javascript">
+    window.tailwind.config = {
+      darkMode: ['class'],
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+            secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+            destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+            muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+            accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+            popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
+            card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+          },
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+        --primary: 240 5.9% 10%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 240 4.8% 95.9%;
+        --secondary-foreground: 240 5.9% 10%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --accent: 240 4.8% 95.9%;
+        --accent-foreground: 240 5.9% 10%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 5.9% 90%;
+        --input: 240 5.9% 90%;
+        --ring: 240 5.9% 10%;
+        --radius: 0.5rem;
+      }
+      .dark {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex flex-col items-center justify-center min-h-screen bg-background">
+    <div class="flex flex-col items-center mb-8">
+      <img aria-hidden="true" alt="welcome-illustration" src="https://openui.fly.dev/openui/24x24.svg?text=👋"
+        class="mb-4" />
+      <h1 class="text-3xl font-bold text-primary">BIENVENIDO</h1>
+    </div>
+    <h2 class="text-2xl font-semibold text-primary">Registro</h2>
+    <form class="w-full max-w-sm mt-4" id="registerForm" action="/register" method="POST">
+      <div class="mb-4">
+        <label class="block text-muted-foreground" for="name">Nombre(s)</label>
+        <input class="border border-border rounded-lg p-2 w-full" type="text" id="name" name="name"
+          placeholder="Introduce un nombre de usuario" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-muted-foreground" for="last_name">Apellido(s)</label>
+        <input class="border border-border rounded-lg p-2 w-full" type="text" id="last_name" name="last_name"
+          placeholder="Introduce tus apellido(s)" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-muted-foreground" for="rusername">Nombre de usuario</label>
+        <input class="border border-border rounded-lg p-2 w-full" type="text" id="rusername" name="rusername"
+          placeholder="Introduce un nombre de usuario" required />
+      </div>
+      <div class="mb-4">
+        <label class="block text-muted-foreground" for="rpassword">Contraseña</label>
+        <input class="border border-border rounded-lg p-2 w-full" type="password" id="rpassword" name="rpassword"
+          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="Contraseña" required />
+      </div>
+      <button
+        class="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg p-2 w-full">Regístrate</button>
+
+      <div id="message" class="hidden bg-gray-100 p-6 mt-4 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Tu contraseña debe contener:</h3>
+        <p id="letter" class="invalid text-red-500 mb-2">Una letra <b>minúscula</b></p>
+        <p id="capital" class="invalid text-red-500 mb-2">Una letra <b>mayúscula</b></p>
+        <p id="number" class="invalid text-red-500 mb-2">Un <b>número</b></p>
+        <p id="length" class="invalid text-red-500 mb-2">Mínimo <b>8 caracteres</p>
+      </div>
+    </form>
+    <p class="mt-4 text-muted-foreground">¿Ya tienes una cuenta? <a href="/"
+        class="text-cyan-600 hover:underline">Inicia sesión</a></p>
+    <div id="toast"
+      class="hidden fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-md transition-opacity duration-500">
+      <span id="toastMessage"></span>
+    </div>
+
+  </div>
+  <script>
+    var myInput = document.getElementById("rpassword");
+    var messageBox = document.getElementById("message");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+
+    // Show the message box when the user clicks on the password field
+    myInput.onfocus = function () {
+      messageBox.classList.remove("hidden");
+    }
+
+    // Hide the message box when the user clicks outside of the password field
+    myInput.onblur = function () {
+      messageBox.classList.add("hidden");
+    }
+
+    // Validate each requirement as the user types in the password field
+    myInput.onkeyup = function () {
+      // Validate lowercase letters
+      var lowerCaseLetters = /[a-z]/g;
+      if (myInput.value.match(lowerCaseLetters)) {
+        letter.classList.remove("text-red-500");
+        letter.classList.add("text-green-500");
+      } else {
+        letter.classList.remove("text-green-500");
+        letter.classList.add("text-red-500");
+      }
+
+      // Validate uppercase letters
+      var upperCaseLetters = /[A-Z]/g;
+      if (myInput.value.match(upperCaseLetters)) {
+        capital.classList.remove("text-red-500");
+        capital.classList.add("text-green-500");
+      } else {
+        capital.classList.remove("text-green-500");
+        capital.classList.add("text-red-500");
+      }
+
+      // Validate numbers
+      var numbers = /[0-9]/g;
+      if (myInput.value.match(numbers)) {
+        number.classList.remove("text-red-500");
+        number.classList.add("text-green-500");
+      } else {
+        number.classList.remove("text-green-500");
+        number.classList.add("text-red-500");
+      }
+
+      // Validate length
+      if (myInput.value.length >= 8) {
+        length.classList.remove("text-red-500");
+        length.classList.add("text-green-500");
+      } else {
+        length.classList.remove("text-green-500");
+        length.classList.add("text-red-500");
+      }
+    }
+  </script>
+  <script>
+    document.querySelector('form').onsubmit = async function (event) {
+        event.preventDefault();
+    
+        const formData = new FormData(event.target);
+        const response = await fetch('/register', {
+            method: 'POST',
+            body: formData
+        });
+    
+        const result = await response.json();
+        showToast(result.message, result.status === "success");
+    
+        if (result.status === "success") {
+            setTimeout(() => window.location.href = '/', 2000);
+        }
+    };
+    
+    function showToast(message, isSuccess) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+    
+        toastMessage.textContent = message;
+        toast.classList.remove("hidden");
+        toast.classList.remove("bg-green-500", "bg-red-500");
+    
+        // Cambia el color según el tipo de mensaje
+        toast.classList.add(isSuccess ? "bg-green-500" : "bg-red-500");
+    
+        // Oculta el toast después de 3 segundos
+        setTimeout(() => {
+            toast.classList.add("opacity-0");
+        }, 3000);
+    
+        // Elimina el toast del DOM después de la animación
+        setTimeout(() => {
+            toast.classList.add("hidden");
+            toast.classList.remove("opacity-0");
+        }, 3500);
+    }
+    </script>    
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+
+</html>
