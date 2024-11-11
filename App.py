@@ -123,74 +123,30 @@ print(f"Exactitud del modelo: {accuracy}")
 def home():
     return render_template('formTest.html')
 
-# Ruta para mostrar el formulario de datos de salud
-@app.route('/health_form')
-def health_form():
-    return render_template('health_form.html')
-
-# Ruta para mostrar el formulario de register
-@app.route('/register_form')
-def register_form():
-    return render_template('register.html')
-
-@app.route('/Home')
-def Home():
-    if 'username' in session and 'role' in session:
-        return render_template('index.html', username=session['username'], role=session['role'])
-    else:
-        return redirect(url_for('login_page'))
-
-# Ruta para manejar el login
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-    user = users_collection.find_one({"username": username})
-    if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
-        session['username'] = user['username']
-        session['role'] = user.get('role', 'User')  # Valor por defecto 'User' si no existe
-        return redirect(url_for('Home'))
-    else:
-        return "Usuario o contraseña incorrecta."
+# Ruta para realizar el diagnóstico
+@app.route('/evaluar_diabetes', methods=['POST'])
+def evaluar_diabetes():
+    datos = request.get_json()
     
-# Ruta para manejar el registro
-@app.route('/register', methods=['POST'])
-def register():
-    registeredUser = {
-        "name": request.form['name'],
-        "last_name": request.form['last_name'],
-        "username": request.form['rusername'],
-        "password": request.form['rpassword'].encode('utf-8'),
-        "role": "User"
+    # Obtener todas las variables del JSON recibido
+    input_data = {
+        'Age': int(datos['age']),
+        'Glucose': float(datos['glucose']),
+        'Pregnancies': int(datos['pregnancies']),
+        'BloodPressure': float(datos['bloodpressure']),
+        'SkinThickness': float(datos['skinthickness']),
+        'Insulin': float(datos['insulin']),
+        'BMI': float(datos['bmi']),
+        'DiabetesPedigreeFunction': float(datos['diabetespedigreefunction']),
     }
     
-    if registeredUser.username == users_collection.find_one({"username": registeredUser.username}):
-        return "Woops! Ya existe ese nombre de usuario, por favor elige otro :P"
-    else:
-        registeredUser = users_collection.insert_one({})
-        
-
-# Ruta para recibir y procesar los datos de salud
-@app.route('/submit_health_data', methods=['POST'])
-def submit_health_data():
-    health_data = {
-        "Pregnancies": int(request.form['pregnancies']),
-        "Glucose": int(request.form['glucose']),
-        "BloodPressure": int(request.form['blood_pressure']),
-        "SkinThickness": int(request.form['skin_thickness']),
-        "Insulin": int(request.form['insulin']),
-        "BMI": float(request.form['bmi']),
-        "DiabetesPedigreeFunction": float(request.form['diabetes_pedigree']),
-        "Age": int(request.form['age'])
-    }
-
-    # Simulación de evaluación de diabetes (un resultado simple para prueba)
-    outcome = 1 if health_data['Glucose'] >= 140 else 0  # Ejemplo de criterio simple
-    health_data['Outcome'] = outcome
-    health_records_collection.insert_one(health_data)
-
-    if outcome == 1:
-        return "Positivo para diabetes. Consulta a un médico."
+    # Crear un DataFrame con los datos del usuario
+    datos_usuario = pd.DataFrame([input_data])
+    resultado = decision_tree.predict(datos_usuario)
+    
+    # Generar el diagnóstico
+    if resultado[0] == 1:
+        resultado_texto = "Posible riesgo de diabetes."
     else:
         resultado_texto = "No se detecta riesgo de diabetes."
     
