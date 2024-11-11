@@ -58,7 +58,7 @@ def login_page():
 def health_form():
     return render_template('health_form.html')
 
-@app.route('/Home')
+@app.route('/home')
 def Home():
     if 'username' in session and 'role' in session:
         return render_template('index.html', username=session['username'], role=session['role'])
@@ -66,20 +66,51 @@ def Home():
         return redirect(url_for('login_page'))
 
 # Ruta para manejar el login
-# Ruta para manejar el login
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
     password = request.form['password']
     user = users_collection.find_one({"username": username})
-    
-    # Si las contraseñas son en texto plano, simplemente compara:
-    if user and user['password'] == password:
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         session['username'] = user['username']
         session['role'] = user.get('role', 'User')  # Valor por defecto 'User' si no existe
-        return redirect(url_for('Home'))
+        return jsonify({"status": "success", "message": "Inicio de sesión exitoso."}), 200
     else:
-        return "Usuario o contraseña incorrecta."
+        return jsonify({"status": "error", "message": "Usuario o contraseña incorrecta."}), 401
+    
+# Ruta para mostrar el formulario de register
+@app.route('/register_form')
+def register_form():
+    return render_template('register.html')
+
+# Ruta para manejar el registro
+@app.route('/register', methods=['POST'])
+def register():
+    registeredUser = {
+        "name": request.form['name'],
+        "last_name": request.form['last_name'],
+        "username": request.form['rusername'],
+        "password": request.form['rpassword'],
+        "role": "User"
+    }
+    
+    # Verifica si el usuario ya existe
+    existing_user = users_collection.find_one({"username": registeredUser["username"]})
+    if existing_user:
+        return jsonify({"status": "error", "message": "¡Woops! El nombre de usuario ya existe, elige otro."}), 409
+    
+    # Encripta la contraseña
+    password = request.form['rpassword'].encode('utf-8')
+    hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+
+    # Completa el registro del usuario con la contraseña encriptada
+    registeredUser["password"] = hashed_password
+    registeredUser["role"] = "User"
+    
+    # Inserta el nuevo usuario en la colección
+    users_collection.insert_one(registeredUser)
+    return jsonify({"status": "success", "message": "¡Registro exitoso! Inicia sesión."}), 201
+
 
 # Ruta principal para mostrar el formulario HTML
 @app.route('/formTest')

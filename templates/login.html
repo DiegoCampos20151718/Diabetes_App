@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,38 +78,96 @@
     }
   </style>
 </head>
+
 <body>
+  <div id="toast"
+    class="hidden fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md shadow-md transition-opacity duration-500">
+    <span id="toastMessage"></span>
+  </div>
   <div class="flex flex-col items-center justify-center min-h-screen bg-background">
     <div class="flex flex-col items-center mb-8">
-      <img aria-hidden="true" alt="welcome-illustration" src="https://openui.fly.dev/openui/24x24.svg?text=👋" class="mb-4" />
+      <img aria-hidden="true" alt="welcome-illustration" src="https://openui.fly.dev/openui/24x24.svg?text=👋"
+        class="mb-4" />
       <h1 class="text-3xl font-bold text-primary">BIENVENIDO</h1>
     </div>
     <h2 class="text-2xl font-semibold text-primary">Iniciar Sesión</h2>
     <form class="w-full max-w-sm mt-4" id="loginForm" action="/login" method="POST">
       <div class="mb-4">
         <label class="block text-muted-foreground" for="username">Nombre de usuario</label>
-        <input class="border border-border rounded-lg p-2 w-full" type="text" id="username" name="username" placeholder="Introduce tu nombre de usuario" required />
+        <input class="border border-border rounded-lg p-2 w-full" type="text" id="username" name="username"
+          placeholder="Introduce tu nombre de usuario" required />
       </div>
       <div class="mb-4">
         <label class="block text-muted-foreground" for="password">Contraseña</label>
-        <input class="border border-border rounded-lg p-2 w-full" type="password" id="password" name="password" placeholder="Contraseña" required/>
+        <input class="border border-border rounded-lg p-2 w-full" type="password" id="password" name="password"
+          placeholder="Contraseña" required />
         <a href="#" class="text-accent text-sm hover:underline">¿Olvidaste tu contraseña?</a>
       </div>
-      <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg p-2 w-full">Iniciar Sesión</button>
+      <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg p-2 w-full">Iniciar
+        Sesión</button>
     </form>
     <div class="flex items-center my-4">
       <hr class="flex-grow border-muted" />
       <span class="mx-2 text-muted-foreground">O</span>
       <hr class="flex-grow border-muted" />
     </div>
-    <button class="flex items-center justify-center bg-muted text-muted-foreground hover:bg-muted/80 rounded-lg p-2 w-full">
-      <img src="https://openui.fly.dev/openui/24x24.svg?text=G" alt="Google logo" class="mr-2" />
+    <button
+      class="flex items-center justify-center bg-muted text-muted-foreground hover:bg-muted/80 rounded-lg p-2 w-full">
+      <img src="https://openui.fly.dev/openui/24x24.svg?text=G" alt="Google logo" class="mt-2" />
       Iniciar sesión con Google
     </button>
-    <p class="mt-4 text-muted-foreground">¿No tienes una cuenta? <a href="registrar.php" class="text-accent hover:underline">Registrarse</a></p>
+    <p class="mt-4 text-muted-foreground">¿No tienes una cuenta? <a href="register_form"
+        class="text-cyan-600 hover:underline">Regístrate</a></p>
   </div>
+
+  <script>
+    document.querySelector('form').onsubmit = async function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const response = await fetch('/login', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      // Muestra el mensaje con el toast
+      showToast(result.message, result.status === "success");
+
+      // Redirige al home si el inicio de sesión es exitoso
+      if (result.status === "success") {
+        setTimeout(() => window.location.href = '/home', 0);
+      }
+    };
+
+    function showToast(message, isSuccess) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+
+      toastMessage.textContent = message;
+      toast.classList.remove("hidden");
+      toast.classList.remove("bg-green-500", "bg-red-500");
+
+      // Cambia el color según el tipo de mensaje
+      toast.classList.add(isSuccess ? "bg-green-500" : "bg-red-500");
+
+      // Oculta el toast después de 3 segundos
+      setTimeout(() => {
+        toast.classList.add("opacity-0");
+      }, 3000);
+
+      // Elimina el toast del DOM después de la animación
+      setTimeout(() => {
+        toast.classList.add("hidden");
+        toast.classList.remove("opacity-0");
+      }, 3500);
+    }
+  </script>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 </body>
+
 </html>
