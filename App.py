@@ -1,93 +1,20 @@
-# from flask import Flask, request, render_template, redirect, url_for, session
-# from pymongo import MongoClient
-# from bson.objectid import ObjectId
-# import bcrypt
-# from datetime import datetime
-
-# app = Flask(__name__)
-# app.secret_key = 'supersecretkey'  # Cambia esto por una clave secreta más segura
-
-# # Conectar a MongoDB
-# client = MongoClient("mongodb+srv://alexcamdel254:KQVI1NIGDBkQpgme@cluster0.ryqs3.mongodb.net/")
-# db = client['Diabetes']
-# users_collection = db['Users']
-# health_records_collection = db['health_records']
-
-# # Ruta para mostrar el formulario de login
-# @app.route('/')
-# def login_page():
-#     return render_template('login.html')
-
-# # Ruta para mostrar el formulario de datos de salud
-# @app.route('/health_form')
-# def health_form():
-#     return render_template('health_form.html')
-
-# @app.route('/Home')
-# def Home():
-#     if 'username' in session and 'role' in session:
-#         return render_template('index.html', username=session['username'], role=session['role'])
-#     else:
-#         return redirect(url_for('login_page'))
-
-# # Ruta para manejar el login
-# @app.route('/login', methods=['POST'])
-# def login():
-#     username = request.form['username']
-#     password = request.form['password']
-#     user = users_collection.find_one({"username": username})
-#     if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
-#         session['username'] = user['username']
-#         session['role'] = user.get('role', 'User')  # Valor por defecto 'User' si no existe
-#         return redirect(url_for('Home'))
-#     else:
-#         return "Usuario o contraseña incorrecta."
-
-# # Ruta para recibir y procesar los datos de salud
-# @app.route('/submit_health_data', methods=['POST'])
-# def submit_health_data():
-#     health_data = {
-#         "Pregnancies": int(request.form['pregnancies']),
-#         "Glucose": int(request.form['glucose']),
-#         "BloodPressure": int(request.form['blood_pressure']),
-#         "SkinThickness": int(request.form['skin_thickness']),
-#         "Insulin": int(request.form['insulin']),
-#         "BMI": float(request.form['bmi']),
-#         "DiabetesPedigreeFunction": float(request.form['diabetes_pedigree']),
-#         "Age": int(request.form['age'])
-#     }
-
-#     # Simulación de evaluación de diabetes (un resultado simple para prueba)
-#     outcome = 1 if health_data['Glucose'] >= 140 else 0  # Ejemplo de criterio simple
-#     health_data['Outcome'] = outcome
-#     health_records_collection.insert_one(health_data)
-
-#     if outcome == 1:
-#         return "Positivo para diabetes. Consulta a un médico."
-#     else:
-#         return "Negativo para diabetes. Mantén hábitos saludables."
-
-# # Ruta para cerrar sesión
-# @app.route('/logout')
-# def logout():
-#     session.clear()
-#     return redirect(url_for('login_page'))
-
-# if __name__ == "__main__":
-#     app.run(debug=True)
-
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import bcrypt
+from datetime import datetime
 import pandas as pd
 from scipy.stats import entropy
 from sklearn.model_selection import train_test_split
 from sklearn import tree
-from pymongo import MongoClient
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # Cambia esto por una clave secreta más segura
 
 # Conexión a MongoDB
-client = MongoClient("mongodb+srv://Quetzal:Sparky123@cluster0.lyfbd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client.Diabetes
+client = MongoClient("mongodb+srv://alexcamdel254:KQVI1NIGDBkQpgme@cluster0.ryqs3.mongodb.net/")
+db = client['Diabetes']  # Cambia 'Diabetes' por el nombre de tu BD
+users_collection = db['Users']
 coleccion = db.health_records
 
 # Obtener los documentos de MongoDB y convertirlos en un DataFrame
@@ -103,7 +30,10 @@ for var in variables:
     entropias[var] = entropy(probs, base=2)
     print(f"Entropía de '{var}': {entropias[var]}")
 
-# Seleccionar las características y la variable objetivo
+# Eliminar filas con valores NaN en las características o la variable objetivo
+datos_finales = datos_finales.dropna(subset=variables + ['Outcome'])
+
+# Seleccionar las características y la variable objetivo después de eliminar NaNs
 features = datos_finales[variables]
 target = datos_finales['Outcome']
 
@@ -118,9 +48,42 @@ decision_tree.fit(X_train, y_train)
 accuracy = decision_tree.score(X_test, y_test)
 print(f"Exactitud del modelo: {accuracy}")
 
-# Ruta principal para mostrar el formulario HTML
+# Ruta para mostrar el formulario de login
 @app.route('/')
-def home():
+def login_page():
+    return render_template('login.html')
+
+# Ruta para mostrar el formulario de datos de salud
+@app.route('/health_form')
+def health_form():
+    return render_template('health_form.html')
+
+@app.route('/Home')
+def Home():
+    if 'username' in session and 'role' in session:
+        return render_template('index.html', username=session['username'], role=session['role'])
+    else:
+        return redirect(url_for('login_page'))
+
+# Ruta para manejar el login
+# Ruta para manejar el login
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    user = users_collection.find_one({"username": username})
+    
+    # Si las contraseñas son en texto plano, simplemente compara:
+    if user and user['password'] == password:
+        session['username'] = user['username']
+        session['role'] = user.get('role', 'User')  # Valor por defecto 'User' si no existe
+        return redirect(url_for('Home'))
+    else:
+        return "Usuario o contraseña incorrecta."
+
+# Ruta principal para mostrar el formulario HTML
+@app.route('/formTest')
+def formTest():
     return render_template('formTest.html')
 
 # Ruta para realizar el diagnóstico
@@ -152,5 +115,11 @@ def evaluar_diabetes():
     
     return jsonify({'resultado': resultado_texto})
 
-if __name__ == '__main__':
+# Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login_page'))
+
+if __name__ == "__main__":
     app.run(debug=True)
